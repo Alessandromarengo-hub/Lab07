@@ -1,4 +1,7 @@
+from cProfile import label
+
 import flet as ft
+from flet.core.types import MainAxisAlignment
 from UI.alert import AlertManager
 
 '''
@@ -36,10 +39,35 @@ class View:
         self.txt_titolo = ft.Text(value="Musei di Torino", size=38, weight=ft.FontWeight.BOLD)
 
         # --- Sezione 2: Filtraggio ---
+        def dropdown_changed(e):
+            pass
+
+        self.museo_dropdown = ft.Dropdown(
+            options=[
+                ft.dropdown.Option("Museo"),
+            ],
+            value="Museo",
+            on_change=dropdown_changed  # callback quando cambia selezione
+        )
+
+        self.epoca_dropdown = ft.Dropdown(
+            options=[
+                ft.dropdown.Option("Epoca"),
+            ],
+            value="Epoca",
+            on_change=dropdown_changed  # callback quando cambia selezione
+        )
+
         # TODO
 
         # Sezione 3: Artefatti
+        self.bottone_mostra = ft.ElevatedButton("Mostra artefatti", on_click=self.controller.mostra_artefatti)
+        self.lista_artefatti = ft.ListView(expand=True, spacing=5, padding=10,)
         # TODO
+
+        self.controller.popola_musei()
+        self.controller.popola_epoche()
+
 
         # --- Toggle Tema ---
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
@@ -54,8 +82,13 @@ class View:
 
             # Sezione 2: Filtraggio
             # TODO
+            ft.Row(spacing=10, controls= [self.museo_dropdown, self.epoca_dropdown]
+                   , alignment= MainAxisAlignment.CENTER),
+            ft.Divider(),
 
             # Sezione 3: Artefatti
+            self.bottone_mostra,
+            self.lista_artefatti,
             # TODO
         )
 
